@@ -109,15 +109,17 @@ export const exampleJsonSchema = {
 
   answer_options: [
     {
-      id: "A",
-      text: "option 1.",
+      id: "1",
+      key: "A",
+      answer_text: "option 1.",
     },
     {
-      id: "B",
-      text: "option 2.",
+      id: "2",
+      key: "B",
+      answer_text: "option 2.",
     },
   ],
-  correct_answer: { id: "B" },
+  correct_answer: { id: "2", key: "B", answer_text: "option 2." },
   explanation:
     "The correct answer is B because it provides a specific example that supports the statement about 'predominantly positive'.",
 };
