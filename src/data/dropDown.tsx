@@ -45,4 +45,9 @@ export const TestType = [
     value: "SAT",
     label: "SAT",
   },
+  {
+    id: 2,
+    value: "ACT",
+    label: "ACT",
+  },
 ];
