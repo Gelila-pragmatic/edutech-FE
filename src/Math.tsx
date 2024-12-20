@@ -9,9 +9,6 @@ import { ImageToKaTexParse } from "./api";
 import Notification from "./components/Notification";
 
 const Math = () => {
-  const [questionText, setQuestText] = useState(""); // question with 4 options
-  const [answerText, setAnswerText] = useState(""); // correct option with explanation
-
   const [difficulty, setDifficulty] = useState("");
   const [subject, setSubject] = useState("");
   const [testType, setTestType] = useState("");
@@ -25,6 +22,13 @@ const Math = () => {
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const [answerImagePreview, setAnswerImagePreview] = useState<string | null>(
+    null
+  );
+  const [selectedAnswerFile, setSelectedAnswerFile] = useState<File | null>(
+    null
+  );
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -42,9 +46,27 @@ const Math = () => {
     }
   };
 
+  const handleAnswerImageChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedAnswerFile(file);
+
+      // Generate a preview URL
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (reader.readyState === 2) {
+          setAnswerImagePreview(reader.result as string);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleClear = () => {
-    setAnswerText("");
-    setQuestText("");
+    setSelectedFile(null);
+    setSelectedAnswerFile(null);
     setParsedJson("");
     setIsLoading(false);
   };
@@ -66,12 +88,13 @@ const Math = () => {
       setIsLoading(true);
       const question = {
         question_image: selectedFile,
-        raw_answer_image: answerText,
+        answer_image: selectedAnswerFile,
         subject: subject,
         difficulty: difficulty,
         test_type: testType,
         // is_open_ended: isOpenEnded,
       };
+
       const res = await ImageToKaTexParse(question);
       const data = JSON.stringify(res?.data);
       const value = data ? JSON.stringify(JSON.parse(data), null, 2) : "";
@@ -149,19 +172,30 @@ const Math = () => {
                   <div className="h-44">
                     <img
                       src={imagePreview}
-                      alt="Preview"
+                      alt="Question Preview"
                       className="w-full h-full"
                     />
                   </div>
                 )}
               </div>
-              {/* {!isOpenEnded && ( */}
-              <Textarea
-                onChange={(e) => setAnswerText(e.target.value)}
-                value={answerText}
-                label="Answer text"
-                identifier="answerText"
-              />
+
+              <div className="flex flex-wrap lg:gap-2 lg:flex-nowrap">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleAnswerImageChange}
+                  style={{ marginBottom: "10px" }}
+                />
+                {answerImagePreview && (
+                  <div className="h-44">
+                    <img
+                      src={answerImagePreview}
+                      alt="Answer Preview"
+                      className="w-full h-full"
+                    />
+                  </div>
+                )}
+              </div>
               {/* )} */}
               <div className="flex justify-end w-full gap-4">
                 <button

@@ -13,8 +13,8 @@ interface QuestionData {
 }
 
 interface ImageQuestionData {
-  question_image: string;
-  raw_answer_image: string;
+  question_image: File | null;
+  answer_image: File | null;
   subject: string;
   difficulty: string;
   test_type: string;
