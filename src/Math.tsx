@@ -1,6 +1,5 @@
 import React from "react";
 import { useState } from "react";
-import Textarea from "./components/Textarea";
 import Dropdown from "./components/Dropdown";
 import { Difficulty, Subject, TestType } from "./data/dropDown";
 import LayoutEvenColumnsTwo from "./components/Layout";
@@ -12,10 +11,8 @@ const Math = () => {
   const [difficulty, setDifficulty] = useState("");
   const [subject, setSubject] = useState("");
   const [testType, setTestType] = useState("");
-  // const [isOpenEnded, setIsOpenEnded] = useState(false);
 
   const [parsedJson, setParsedJson] = useState(""); // the parsed json value state
-
   const [isLoading, setIsLoading] = useState(false); // for parsing the question text into json
 
   const [error, setError] = useState("");
@@ -84,18 +81,30 @@ const Math = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      setIsLoading(true);
-      const question = {
-        question_image: selectedFile,
-        answer_image: selectedAnswerFile,
-        subject: subject,
-        difficulty: difficulty,
-        test_type: testType,
-        // is_open_ended: isOpenEnded,
-      };
+    setIsLoading(true);
+    // setResponseError(null); // Reset previous error
 
-      const res = await ImageToKaTexParse(question);
+    try {
+      // Prepare the FormData object
+      const formData = new FormData();
+
+      // Append the text fields
+      formData.append("subject", subject);
+      formData.append("difficulty", difficulty);
+      formData.append("test_type", testType);
+
+      // Append the images if they exist
+      if (selectedFile) {
+        formData.append("question_image", selectedFile);
+      }
+      if (selectedAnswerFile) {
+        formData.append("answer_image", selectedAnswerFile);
+      }
+      console.log(formData);
+      // Send the request with FormData
+      const res = await ImageToKaTexParse(formData);
+
+      // Parse the response (if it's JSON) and update the state
       const data = JSON.stringify(res?.data);
       const value = data ? JSON.stringify(JSON.parse(data), null, 2) : "";
       setParsedJson(value);
@@ -161,7 +170,7 @@ const Math = () => {
                   onChange={(e) => setTestType(e.target.value)}
                 />
               </div>
-              <div className="flex flex-wrap lg:gap-2 lg:flex-nowrap">
+              <div className="flex flex-col flex-wrap lg:gap-2 lg:flex-nowrap my-2">
                 <input
                   type="file"
                   accept="image/*"
@@ -173,13 +182,13 @@ const Math = () => {
                     <img
                       src={imagePreview}
                       alt="Question Preview"
-                      className="w-full h-full"
+                      className="w-auto h-full"
                     />
                   </div>
                 )}
               </div>
 
-              <div className="flex flex-wrap lg:gap-2 lg:flex-nowrap">
+              <div className="flex flex-col flex-wrap lg:gap-2 lg:flex-nowrap my-2">
                 <input
                   type="file"
                   accept="image/*"
@@ -191,7 +200,7 @@ const Math = () => {
                     <img
                       src={answerImagePreview}
                       alt="Answer Preview"
-                      className="w-full h-full"
+                      className="w-auto h-full"
                     />
                   </div>
                 )}

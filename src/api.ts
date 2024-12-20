@@ -53,7 +53,7 @@ interface QuestionSchema {
 
 export const axiosInstance = axios.create({
   baseURL: url,
-  timeout: 5000,
+  timeout: 100000,
   headers: {
     Accept: "application/json",
   },
@@ -73,10 +73,28 @@ export const JsonParse = async (
   return axiosInstance.post("/parse-text", QuestionData);
 };
 
+// export const ImageToKaTexParse = async (
+//   ImageQuestionData: Partial<ImageQuestionData>
+// ): Promise<AxiosResponse<ApiResponse<ImageQuestionData>>> => {
+//   return axiosInstance.post("/math-question", ImageQuestionData);
+// };
+
+// Assuming ApiResponse and ImageQuestionData types are defined elsewhere in your project
 export const ImageToKaTexParse = async (
-  ImageQuestionData: Partial<ImageQuestionData>
+  formData: FormData
 ): Promise<AxiosResponse<ApiResponse<ImageQuestionData>>> => {
-  return axiosInstance.post("/math-question", ImageQuestionData);
+  try {
+    const response = await axiosInstance.post("/math-question", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data", // Ensures the server knows this is a form data request
+      },
+    });
+    return response;
+  } catch (error) {
+    // Handle any errors if necessary
+    console.error("Error in submitting form data:", error);
+    throw error;
+  }
 };
 
 export const InsertJsonDb = async (

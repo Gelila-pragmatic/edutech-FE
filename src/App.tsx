@@ -9,6 +9,8 @@ function App() {
       {/* <Route element={<ClientAlreadyLogged />}> */}
       <Route path="/" element={<English />} />
       <Route path="/math" element={<Math />} />
+      <Route path="*" element={<p>Not found</p>} />
+      {/* </Route> */}
       {/* </Route> */}
     </Routes>
   );
