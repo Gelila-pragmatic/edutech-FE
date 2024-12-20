@@ -12,6 +12,15 @@ interface QuestionData {
   // is_open_ended: boolean;
 }
 
+interface ImageQuestionData {
+  question_image: string;
+  raw_answer_image: string;
+  subject: string;
+  difficulty: string;
+  test_type: string;
+  // is_open_ended: boolean;
+}
+
 // Define a type for the response if necessary
 interface ApiResponse<T> {
   data: T;
@@ -61,7 +70,13 @@ export const axiosNeonInstance = axios.create({
 export const JsonParse = async (
   QuestionData: Partial<QuestionData>
 ): Promise<AxiosResponse<ApiResponse<QuestionData>>> => {
-  return axiosInstance.post("/process", QuestionData);
+  return axiosInstance.post("/parse-text", QuestionData);
+};
+
+export const ImageToKaTexParse = async (
+  ImageQuestionData: Partial<ImageQuestionData>
+): Promise<AxiosResponse<ApiResponse<ImageQuestionData>>> => {
+  return axiosInstance.post("/math-question", ImageQuestionData);
 };
 
 export const InsertJsonDb = async (
