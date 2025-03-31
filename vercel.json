@@ -1,0 +1,13 @@
+{
+    "routes": [
+      {
+        "src": "/parse-text",
+        "methods": ["OPTIONS", "POST"],
+        "headers": {
+          "Access-Control-Allow-Origin": "https://edutech-fe.vercel.app",
+          "Access-Control-Allow-Methods": "POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type"
+        }
+      }
+    ]
+  }
